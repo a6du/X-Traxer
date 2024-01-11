@@ -1,11 +1,12 @@
 from flask import Flask
 from flask_smorest import Api
 
-import models
+# import models
 
 from db import db
 from resources.expense import blp as ExpenseBlueprint
-
+from resources.category import blp as CategoryBlueprint
+from models import TransactionModel, CategoryModel
 
 
 def create_app(db_url=None):
@@ -25,9 +26,24 @@ def create_app(db_url=None):
     api = Api(app)
 
     with app.app_context():
+        db.drop_all()
         db.create_all()
 
-    api.register_blueprint(ExpenseBlueprint)
+        transaction = TransactionModel(name="DR")
+        db.session.add(transaction)
+        transaction = TransactionModel(name="CR")
+        db.session.add(transaction)
 
+        category = CategoryModel(name="Unknown")
+        db.session.add(category)        
+        category = CategoryModel(name="Food & Drinks")
+        db.session.add(category)
+        category = CategoryModel(name="Tea & Snacks")
+        db.session.add(category)
+
+        db.session.commit()
+
+    api.register_blueprint(ExpenseBlueprint)
+    api.register_blueprint(CategoryBlueprint)
 
     return app
