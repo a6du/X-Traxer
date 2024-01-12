@@ -11,7 +11,6 @@ class PlainCategorySchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.Str(required=True)
 
-
 class PlainTransactionSchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.Str(required=True)    
@@ -28,6 +27,10 @@ class PlainAccountSchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.Str(required=True)  
 
+class PlainTagSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.Str()        
+
 class ExpenseSchema(PlainExpenseSchema):
     category_id = fields.Int(required=False, load_only=True)
     category = fields.Nested(PlainCategorySchema(), dump_only=True)
@@ -42,7 +45,10 @@ class ExpenseSchema(PlainExpenseSchema):
     income = fields.Nested(PlainIncomeSchema(), dump_only=True)  
 
     account_id = fields.Int(required=False, load_only=True)
-    account = fields.Nested(PlainAccountSchema(), dump_only=True)       
+    account = fields.Nested(PlainAccountSchema(), dump_only=True)  
+
+    tag_list = fields.List(fields.Int,required=False,load_only=True)
+    tags = fields.List(fields.Nested(PlainTagSchema()), dump_only=True)
 
 class ExpenseUpdateSchema(Schema):
     date = fields.DateTime(format='%d-%m-%Y %H:%M:%S')
@@ -64,3 +70,11 @@ class IncomeSchema(PlainIncomeSchema):
 
 class AccountSchema(PlainAccountSchema):
     expenses = fields.List(fields.Nested(PlainExpenseSchema()), dump_only=True)
+
+# class TagSchema(PlainTagSchema):
+#     expenses = fields.List(fields.Nested(PlainExpenseSchema()), dump_only=True)
+
+# class TagAndExpenseSchema(Schema):
+#     message = fields.Str()
+#     expense = fields.Nested(ExpenseSchema)
+#     tag = fields.Nested(TagSchema)

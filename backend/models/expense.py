@@ -26,10 +26,14 @@ class ExpenseModel(db.Model):
     account_id = db.Column(
         db.Integer, db.ForeignKey("accounts.id"), unique=False, nullable=True, default=2
     )     
+    tag_list = db.Column(
+        db.ARRAY(db.Integer), unique=False, nullable=True, default=[]
+    )
 
     category = db.relationship("CategoryModel", back_populates="expenses")
     transaction = db.relationship("TransactionModel", back_populates="expenses")
     spending = db.relationship("SpendingModel", back_populates="expenses")
     income = db.relationship("IncomeModel", back_populates="expenses")
     account = db.relationship("AccountModel", back_populates="expenses")
+    tags = db.relationship("TagModel", back_populates="expenses", secondary="expenses_tags")
 

@@ -6,9 +6,9 @@ from flask_smorest import Api
 from db import db
 from resources.expense import blp as ExpenseBlueprint
 from resources.category import blp as CategoryBlueprint
-from models import TransactionModel, CategoryModel, SpendingModel, IncomeModel, AccountModel
+from models import TransactionModel, CategoryModel, SpendingModel, IncomeModel, AccountModel, TagModel
 
-def create_app(db_url=None):
+def create_app(db_url="postgresql://admin:your_password@localhost/x_traxer"):
     app = Flask(__name__)
     app.config["API_TITLE"] = "X-Traxer REST API"
     app.config["API_VERSION"] = "v1"
@@ -60,6 +60,11 @@ def create_app(db_url=None):
         AccountModel(name="ICICI credit 1001")
         ]
         db.session.add_all(accounts)
+
+        tags=[TagModel(name="#Liked_It"),
+        TagModel(name="#Hated_It")
+        ]
+        db.session.add_all(tags)
 
 
         db.session.commit()

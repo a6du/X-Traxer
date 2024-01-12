@@ -3,7 +3,7 @@ from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 from db import db
-from models import ExpenseModel, CategoryModel, TransactionModel
+from models import ExpenseModel, CategoryModel, TransactionModel, TagModel
 from schemas import ExpenseSchema, ExpenseUpdateSchema
 
 
@@ -59,8 +59,20 @@ class ExpenseList(MethodView):
             expense = CategoryModel.query.get_or_404(category_id)
             expense = TransactionModel.query.get_or_404(transaction_id)
             expense = ExpenseModel(**expense_data)
+            db.session.add(expense)
+            db.session.commit()
+
+            tag_list = expense_data["tag_list"]
+            for value in tag_list:
+                tag_id = value
+                tag = TagModel.query.get_or_404(tag_id)
+                expense.tags.append(tag)
         except:
             expense = ExpenseModel(**expense_data)
+            print("expense",expense)
+
+
+
 
         try:
             db.session.add(expense)
