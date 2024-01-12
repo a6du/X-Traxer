@@ -6,8 +6,7 @@ from flask_smorest import Api
 from db import db
 from resources.expense import blp as ExpenseBlueprint
 from resources.category import blp as CategoryBlueprint
-from models import TransactionModel, CategoryModel
-
+from models import TransactionModel, CategoryModel, SpendingModel, IncomeModel, AccountModel
 
 def create_app(db_url=None):
     app = Flask(__name__)
@@ -29,17 +28,39 @@ def create_app(db_url=None):
         db.drop_all()
         db.create_all()
 
-        transaction = TransactionModel(name="DR")
-        db.session.add(transaction)
-        transaction = TransactionModel(name="CR")
-        db.session.add(transaction)
+        transactions = [
+            TransactionModel(name="DR"),
+            TransactionModel(name="CR")
+        ]
+        db.session.add_all(transactions)
 
-        category = CategoryModel(name="Unknown")
-        db.session.add(category)        
-        category = CategoryModel(name="Food & Drinks")
-        db.session.add(category)
-        category = CategoryModel(name="Tea & Snacks")
-        db.session.add(category)
+        categories=[CategoryModel(name="Unknown"),
+        CategoryModel(name="Food & Drinks"),
+        CategoryModel(name="Tea & Snacks")
+        ]
+        db.session.add_all(categories)
+
+        spendings = [
+            SpendingModel(is_spending="Yes"),
+            SpendingModel(is_spending="-"),
+            SpendingModel(is_spending="No")
+        ]
+        db.session.add_all(spendings)
+
+        incomes = [
+            IncomeModel(is_income="Yes"),
+            IncomeModel(is_income="-"),
+            IncomeModel(is_income="No")
+        ]
+        db.session.add_all(incomes)
+
+        accounts=[AccountModel(name="SBI 9955"),
+        AccountModel(name="ICICI 735"),
+        AccountModel(name="ICICI credit 4009"),
+        AccountModel(name="ICICI credit 1001")
+        ]
+        db.session.add_all(accounts)
+
 
         db.session.commit()
 

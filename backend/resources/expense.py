@@ -52,11 +52,16 @@ class ExpenseList(MethodView):
     @blp.arguments(ExpenseSchema)
     @blp.response(201, ExpenseSchema)
     def post(self, expense_data):
-        category_id = expense_data["category_id"]
-        transaction_id = expense_data["transaction_id"]
-        expense = CategoryModel.query.get_or_404(category_id)
-        expense = TransactionModel.query.get_or_404(transaction_id)
-        expense = ExpenseModel(**expense_data)
+        
+        try:
+            category_id = expense_data["category_id"]
+            transaction_id = expense_data["transaction_id"]
+            expense = CategoryModel.query.get_or_404(category_id)
+            expense = TransactionModel.query.get_or_404(transaction_id)
+            expense = ExpenseModel(**expense_data)
+        except:
+            expense = ExpenseModel(**expense_data)
+
         try:
             db.session.add(expense)
             db.session.commit()
