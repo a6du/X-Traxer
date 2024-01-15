@@ -71,10 +71,10 @@ class IncomeSchema(PlainIncomeSchema):
 class AccountSchema(PlainAccountSchema):
     expenses = fields.List(fields.Nested(PlainExpenseSchema()), dump_only=True)
 
-# class TagSchema(PlainTagSchema):
-#     expenses = fields.List(fields.Nested(PlainExpenseSchema()), dump_only=True)
+class TagSchema(PlainTagSchema):
+    expenses = fields.List(fields.Nested(PlainExpenseSchema()), dump_only=True)
 
-# class TagAndExpenseSchema(Schema):
-#     message = fields.Str()
-#     expense = fields.Nested(ExpenseSchema)
-#     tag = fields.Nested(TagSchema)
+class TagAndExpenseSchema(Schema):
+    message = fields.Str()
+    expense = fields.Nested(ExpenseSchema)
+    tag = fields.Nested(TagSchema)

@@ -1,0 +1,65 @@
+version: "3"
+services:
+
+  postgres-db-1:
+
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=your_passwordt=
+      - POSTGRES_DB=x_traxer
+
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+
+    command: -p 5432
+
+    volumes:
+      - db_data_1:/var/lib/postgresql/data
+
+    networks:
+      - app-network
+
+  pg-admin:
+    image: dpage/pgadmin4:6
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@email.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+      - PGADMIN_LISTEN_PORT=5050
+    ports:
+      - "5050:5050"
+    networks:
+      - app-network
+
+  app1:
+    build:
+      context: ./backend/.
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    # restart: always
+    environment:
+      - POSTGRES_HOST=postgres-db-1
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=your_password
+      - POSTGRES_DB=x_traxer
+    depends_on:
+      - postgres-db-1
+    
+    volumes:
+      - app_data:/app1
+
+    networks:
+      - app-network
+
+volumes:
+  db_data_1:
+  app_data:
+
+
+networks:
+  app-network:
