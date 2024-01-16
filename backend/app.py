@@ -82,4 +82,6 @@ def create_app(db_url="postgresql://admin:your_password@postgres-db-1:5432/x_tra
     api.register_blueprint(CategoryBlueprint)
     api.register_blueprint(TagBlueprint)
 
+    print("Hi")
+
     return app
